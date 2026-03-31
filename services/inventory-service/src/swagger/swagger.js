@@ -1,52 +1,49 @@
-﻿const path = require('path');
-const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerJSDoc = require('swagger-jsdoc');
 
-const buildSwaggerSpec = () => {
-  return swaggerJsdoc({
-    definition: {
-      openapi: '3.0.0',
-      info: {
-        title: 'Inventory Service API',
-        version: '1.0.0',
-        description: 'CRUD operations for product stock and warehouse tracking.'
-      },
-      servers: [
-        {
-          url: `http://localhost:${process.env.PORT || 5006}/api/inventory`,
-          description: 'Direct service access'
-        },
-        {
-          url: `${process.env.GATEWAY_URL || 'http://localhost:3000'}/inventory`,
-          description: 'API Gateway access'
-        }
-      ],
-      tags: [
-        {
-          name: 'Inventory',
-          description: 'Manage inventory levels'
-        }
-      ],
-      components: {
-        schemas: {
-          Inventory: {
-            type: 'object',
-            required: ["productId", "sku", "stockQuantity", "warehouseLocation"],
-            properties: {
-              productId: { type: 'string' },
-              sku: { type: 'string' },
-              stockQuantity: { type: 'number' },
-              reservedQuantity: { type: 'number' },
-              reorderLevel: { type: 'number' },
-              warehouseLocation: { type: 'string' },
-              status: { type: 'string', enum: ['in-stock', 'low-stock', 'out-of-stock'] }
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Inventory API',
+      version: '1.0.0',
+      description: 'API documentation for the Inventory Service'
+    },
+    servers: [
+      {
+        url: 'http://localhost:5006'
+      }
+    ],
+    components: {
+      schemas: {
+        Inventory: {
+          type: 'object',
+          required: ['productId', 'availableStock', 'warehouseLocation'],
+          properties: {
+            productId: {
+              type: 'string',
+              example: 'PROD001'
             },
-            example: { productId: 'PROD-1001', sku: 'SKU-TSHIRT-001', stockQuantity: 150, reservedQuantity: 10, reorderLevel: 20, warehouseLocation: 'Warehouse A - Shelf 3', status: 'in-stock' }
+            availableStock: {
+              type: 'number',
+              example: 100
+            },
+            warehouseLocation: {
+              type: 'string',
+              example: 'Colombo Warehouse'
+            },
+            lastUpdated: {
+              type: 'string',
+              format: 'date-time',
+              example: '2026-03-31T10:00:00.000Z'
+            }
           }
         }
       }
-    },
-    apis: [path.join(__dirname, '../routes/*.js')]
-  });
+    }
+  },
+  apis: ['./src/routes/*.js']
 };
 
-module.exports = buildSwaggerSpec;
+const swaggerSpec = swaggerJSDoc(options);
+
+module.exports = swaggerSpec;

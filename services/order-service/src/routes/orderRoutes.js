@@ -1,9 +1,8 @@
-﻿const express = require('express');
-
+const express = require('express');
 const {
-  listOrder,
-  getOrderById,
   createOrder,
+  getOrders,
+  getOrderById,
   updateOrder,
   deleteOrder
 } = require('../controllers/orderController');
@@ -11,25 +10,15 @@ const {
 const router = express.Router();
 
 /**
- * @openapi
- * /:
- *   get:
- *     summary: Get all orders
- *     tags: [Orders]
- *     responses:
- *       200:
- *         description: A list of orders
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 count:
- *                   type: integer
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Order'
+ * @swagger
+ * tags:
+ *   name: Orders
+ *   description: Order management endpoints
+ */
+
+/**
+ * @swagger
+ * /api/orders:
  *   post:
  *     summary: Create a new order
  *     tags: [Orders]
@@ -42,14 +31,20 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: Order created successfully
+ *   get:
+ *     summary: Get all orders
+ *     tags: [Orders]
+ *     responses:
+ *       200:
+ *         description: List of orders
  */
-router.route('/').get(listOrder).post(createOrder);
+router.route('/').post(createOrder).get(getOrders);
 
 /**
- * @openapi
- * /{id}:
+ * @swagger
+ * /api/orders/{id}:
  *   get:
- *     summary: Get a order by ID
+ *     summary: Get an order by ID
  *     tags: [Orders]
  *     parameters:
  *       - in: path
@@ -63,7 +58,7 @@ router.route('/').get(listOrder).post(createOrder);
  *       404:
  *         description: Order not found
  *   put:
- *     summary: Update a order by ID
+ *     summary: Update an order by ID
  *     tags: [Orders]
  *     parameters:
  *       - in: path
@@ -83,7 +78,7 @@ router.route('/').get(listOrder).post(createOrder);
  *       404:
  *         description: Order not found
  *   delete:
- *     summary: Delete a order by ID
+ *     summary: Delete an order by ID
  *     tags: [Orders]
  *     parameters:
  *       - in: path

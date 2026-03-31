@@ -1,59 +1,87 @@
-﻿const asyncHandler = require('../utils/asyncHandler');
-const cartService = require('../services/cartService');
+﻿const Cart = require('../models/Cart');
 
-const listCart = asyncHandler(async (req, res) => {
-  const records = await cartService.getAll();
-
-  res.status(200).json({
-    count: records.length,
-    data: records
-  });
-});
-
-const getCartById = asyncHandler(async (req, res) => {
-  const record = await cartService.getById(req.params.id);
-
-  if (!record) {
-    res.status(404);
-    throw new Error('Cart not found');
+const createCart = async (req, res) => {
+  try {
+    const cart = await Cart.create(req.body);
+    res.status(201).json(cart);
+  } catch (error) {
+    res.status(400).json({
+      message: 'Failed to create cart',
+      error: error.message
+    });
   }
+};
 
-  res.status(200).json(record);
-});
-
-const createCart = asyncHandler(async (req, res) => {
-  const record = await cartService.create(req.body);
-  res.status(201).json(record);
-});
-
-const updateCart = asyncHandler(async (req, res) => {
-  const record = await cartService.updateById(req.params.id, req.body);
-
-  if (!record) {
-    res.status(404);
-    throw new Error('Cart not found');
+const getCarts = async (req, res) => {
+  try {
+    const carts = await Cart.find().sort({ createdAt: -1 });
+    res.status(200).json(carts);
+  } catch (error) {
+    res.status(500).json({
+      message: 'Failed to fetch carts',
+      error: error.message
+    });
   }
+};
 
-  res.status(200).json(record);
-});
+const getCartById = async (req, res) => {
+  try {
+    const cart = await Cart.findById(req.params.id);
 
-const deleteCart = asyncHandler(async (req, res) => {
-  const record = await cartService.deleteById(req.params.id);
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
 
-  if (!record) {
-    res.status(404);
-    throw new Error('Cart not found');
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(400).json({
+      message: 'Invalid cart ID',
+      error: error.message
+    });
   }
+};
 
-  res.status(200).json({
-    message: 'Cart deleted successfully'
-  });
-});
+const updateCart = async (req, res) => {
+  try {
+    const cart = await Cart.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true
+    });
+
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(400).json({
+      message: 'Failed to update cart',
+      error: error.message
+    });
+  }
+};
+
+const deleteCart = async (req, res) => {
+  try {
+    const cart = await Cart.findByIdAndDelete(req.params.id);
+
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+
+    res.status(200).json({ message: 'Cart deleted successfully' });
+  } catch (error) {
+    res.status(400).json({
+      message: 'Failed to delete cart',
+      error: error.message
+    });
+  }
+};
 
 module.exports = {
-  listCart,
-  getCartById,
   createCart,
+  getCarts,
+  getCartById,
   updateCart,
   deleteCart
 };

@@ -1,9 +1,8 @@
 ﻿const express = require('express');
-
 const {
-  listCart,
-  getCartById,
   createCart,
+  getCarts,
+  getCartById,
   updateCart,
   deleteCart
 } = require('../controllers/cartController');
@@ -11,25 +10,15 @@ const {
 const router = express.Router();
 
 /**
- * @openapi
- * /:
- *   get:
- *     summary: Get all carts
- *     tags: [Cart]
- *     responses:
- *       200:
- *         description: A list of carts
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 count:
- *                   type: integer
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Cart'
+ * @swagger
+ * tags:
+ *   name: Cart
+ *   description: Cart management endpoints
+ */
+
+/**
+ * @swagger
+ * /api/cart:
  *   post:
  *     summary: Create a new cart
  *     tags: [Cart]
@@ -42,12 +31,18 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: Cart created successfully
+ *   get:
+ *     summary: Get all carts
+ *     tags: [Cart]
+ *     responses:
+ *       200:
+ *         description: List of carts
  */
-router.route('/').get(listCart).post(createCart);
+router.route('/').post(createCart).get(getCarts);
 
 /**
- * @openapi
- * /{id}:
+ * @swagger
+ * /api/cart/{id}:
  *   get:
  *     summary: Get a cart by ID
  *     tags: [Cart]

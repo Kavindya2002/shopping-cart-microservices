@@ -1,62 +1,75 @@
-﻿const path = require('path');
-const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerJSDoc = require('swagger-jsdoc');
 
-const buildSwaggerSpec = () => {
-  return swaggerJsdoc({
-    definition: {
-      openapi: '3.0.0',
-      info: {
-        title: 'Cart Service API',
-        version: '1.0.0',
-        description: 'CRUD operations for customer shopping carts.'
-      },
-      servers: [
-        {
-          url: `http://localhost:${process.env.PORT || 5003}/api/cart`,
-          description: 'Direct service access'
-        },
-        {
-          url: `${process.env.GATEWAY_URL || 'http://localhost:3000'}/cart`,
-          description: 'API Gateway access'
-        }
-      ],
-      tags: [
-        {
-          name: 'Cart',
-          description: 'Manage customer shopping carts'
-        }
-      ],
-      components: {
-        schemas: {
-          Cart: {
-            type: 'object',
-            required: ["customerId"],
-            properties: {
-              customerId: { type: 'string' },
-              items: {
-                type: 'array',
-                items: {
-                  type: 'object',
-                  properties: {
-                    productId: { type: 'string' },
-                    productName: { type: 'string' },
-                    quantity: { type: 'number' },
-                    unitPrice: { type: 'number' },
-                    size: { type: 'string' },
-                    color: { type: 'string' }
-                  }
-                }
-              },
-              totalAmount: { type: 'number' },
-              status: { type: 'string', enum: ['active', 'checked-out'] }
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Cart API',
+      version: '1.0.0',
+      description: 'API documentation for the Cart Service'
+    },
+    servers: [
+      {
+        url: 'http://localhost:5003'
+      }
+    ],
+    components: {
+      schemas: {
+        CartItem: {
+          type: 'object',
+          properties: {
+            productId: {
+              type: 'string',
+              example: 'PROD001'
             },
-            example: { customerId: 'CUS-1001', items: [{ productId: 'PROD-1001', productName: 'Linen Shirt', quantity: 2, unitPrice: 4500, size: 'L', color: 'White' }], totalAmount: 9000, status: 'active' }
+            quantity: {
+              type: 'number',
+              example: 2
+            },
+            price: {
+              type: 'number',
+              example: 2500
+            }
+          }
+        },
+        Cart: {
+          type: 'object',
+          required: ['customerId'],
+          properties: {
+            customerId: {
+              type: 'string',
+              example: 'CUST001'
+            },
+            items: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/CartItem'
+              },
+              example: [
+                {
+                  productId: 'PROD001',
+                  quantity: 2,
+                  price: 2500
+                }
+              ]
+            },
+            totalAmount: {
+              type: 'number',
+              example: 5000
+            },
+            status: {
+              type: 'string',
+              example: 'active',
+              enum: ['active', 'checked-out']
+            }
           }
         }
       }
-    },
-    apis: [path.join(__dirname, '../routes/*.js')]
-  });
+    }
+  },
+  apis: ['./src/routes/*.js']
 };
 
-module.exports = buildSwaggerSpec;
+const swaggerSpec = swaggerJSDoc(options);
+
+module.exports = swaggerSpec;

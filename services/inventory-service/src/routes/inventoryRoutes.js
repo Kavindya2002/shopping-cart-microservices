@@ -1,9 +1,8 @@
-﻿const express = require('express');
-
+const express = require('express');
 const {
-  listInventory,
-  getInventoryById,
   createInventory,
+  getInventoryRecords,
+  getInventoryById,
   updateInventory,
   deleteInventory
 } = require('../controllers/inventoryController');
@@ -11,25 +10,15 @@ const {
 const router = express.Router();
 
 /**
- * @openapi
- * /:
- *   get:
- *     summary: Get all inventory records
- *     tags: [Inventory]
- *     responses:
- *       200:
- *         description: A list of inventory records
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 count:
- *                   type: integer
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Inventory'
+ * @swagger
+ * tags:
+ *   name: Inventory
+ *   description: Inventory management endpoints
+ */
+
+/**
+ * @swagger
+ * /api/inventory:
  *   post:
  *     summary: Create a new inventory record
  *     tags: [Inventory]
@@ -41,15 +30,21 @@ const router = express.Router();
  *             $ref: '#/components/schemas/Inventory'
  *     responses:
  *       201:
- *         description: Inventory created successfully
+ *         description: Inventory record created successfully
+ *   get:
+ *     summary: Get all inventory records
+ *     tags: [Inventory]
+ *     responses:
+ *       200:
+ *         description: List of inventory records
  */
-router.route('/').get(listInventory).post(createInventory);
+router.route('/').post(createInventory).get(getInventoryRecords);
 
 /**
- * @openapi
- * /{id}:
+ * @swagger
+ * /api/inventory/{id}:
  *   get:
- *     summary: Get a inventory record by ID
+ *     summary: Get an inventory record by ID
  *     tags: [Inventory]
  *     parameters:
  *       - in: path
@@ -59,11 +54,11 @@ router.route('/').get(listInventory).post(createInventory);
  *           type: string
  *     responses:
  *       200:
- *         description: Inventory found
+ *         description: Inventory record found
  *       404:
- *         description: Inventory not found
+ *         description: Inventory record not found
  *   put:
- *     summary: Update a inventory record by ID
+ *     summary: Update an inventory record by ID
  *     tags: [Inventory]
  *     parameters:
  *       - in: path
@@ -79,11 +74,11 @@ router.route('/').get(listInventory).post(createInventory);
  *             $ref: '#/components/schemas/Inventory'
  *     responses:
  *       200:
- *         description: Inventory updated successfully
+ *         description: Inventory record updated successfully
  *       404:
- *         description: Inventory not found
+ *         description: Inventory record not found
  *   delete:
- *     summary: Delete a inventory record by ID
+ *     summary: Delete an inventory record by ID
  *     tags: [Inventory]
  *     parameters:
  *       - in: path
@@ -93,9 +88,9 @@ router.route('/').get(listInventory).post(createInventory);
  *           type: string
  *     responses:
  *       200:
- *         description: Inventory deleted successfully
+ *         description: Inventory record deleted successfully
  *       404:
- *         description: Inventory not found
+ *         description: Inventory record not found
  */
 router.route('/:id').get(getInventoryById).put(updateInventory).delete(deleteInventory);
 

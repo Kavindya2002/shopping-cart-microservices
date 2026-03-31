@@ -1,9 +1,8 @@
-﻿const express = require('express');
-
+const express = require('express');
 const {
-  listPayment,
-  getPaymentById,
   createPayment,
+  getPayments,
+  getPaymentById,
   updatePayment,
   deletePayment
 } = require('../controllers/paymentController');
@@ -11,25 +10,15 @@ const {
 const router = express.Router();
 
 /**
- * @openapi
- * /:
- *   get:
- *     summary: Get all payments
- *     tags: [Payments]
- *     responses:
- *       200:
- *         description: A list of payments
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 count:
- *                   type: integer
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Payment'
+ * @swagger
+ * tags:
+ *   name: Payments
+ *   description: Payment management endpoints
+ */
+
+/**
+ * @swagger
+ * /api/payments:
  *   post:
  *     summary: Create a new payment
  *     tags: [Payments]
@@ -42,12 +31,18 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: Payment created successfully
+ *   get:
+ *     summary: Get all payments
+ *     tags: [Payments]
+ *     responses:
+ *       200:
+ *         description: List of payments
  */
-router.route('/').get(listPayment).post(createPayment);
+router.route('/').post(createPayment).get(getPayments);
 
 /**
- * @openapi
- * /{id}:
+ * @swagger
+ * /api/payments/{id}:
  *   get:
  *     summary: Get a payment by ID
  *     tags: [Payments]

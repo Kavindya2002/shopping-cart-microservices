@@ -1,59 +1,87 @@
-﻿const asyncHandler = require('../utils/asyncHandler');
-const orderService = require('../services/orderService');
+const Order = require('../models/Order');
 
-const listOrder = asyncHandler(async (req, res) => {
-  const records = await orderService.getAll();
-
-  res.status(200).json({
-    count: records.length,
-    data: records
-  });
-});
-
-const getOrderById = asyncHandler(async (req, res) => {
-  const record = await orderService.getById(req.params.id);
-
-  if (!record) {
-    res.status(404);
-    throw new Error('Order not found');
+const createOrder = async (req, res) => {
+  try {
+    const order = await Order.create(req.body);
+    res.status(201).json(order);
+  } catch (error) {
+    res.status(400).json({
+      message: 'Failed to create order',
+      error: error.message
+    });
   }
+};
 
-  res.status(200).json(record);
-});
-
-const createOrder = asyncHandler(async (req, res) => {
-  const record = await orderService.create(req.body);
-  res.status(201).json(record);
-});
-
-const updateOrder = asyncHandler(async (req, res) => {
-  const record = await orderService.updateById(req.params.id, req.body);
-
-  if (!record) {
-    res.status(404);
-    throw new Error('Order not found');
+const getOrders = async (req, res) => {
+  try {
+    const orders = await Order.find().sort({ createdAt: -1 });
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({
+      message: 'Failed to fetch orders',
+      error: error.message
+    });
   }
+};
 
-  res.status(200).json(record);
-});
+const getOrderById = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
 
-const deleteOrder = asyncHandler(async (req, res) => {
-  const record = await orderService.deleteById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
 
-  if (!record) {
-    res.status(404);
-    throw new Error('Order not found');
+    res.status(200).json(order);
+  } catch (error) {
+    res.status(400).json({
+      message: 'Invalid order ID',
+      error: error.message
+    });
   }
+};
 
-  res.status(200).json({
-    message: 'Order deleted successfully'
-  });
-});
+const updateOrder = async (req, res) => {
+  try {
+    const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true
+    });
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    res.status(200).json(order);
+  } catch (error) {
+    res.status(400).json({
+      message: 'Failed to update order',
+      error: error.message
+    });
+  }
+};
+
+const deleteOrder = async (req, res) => {
+  try {
+    const order = await Order.findByIdAndDelete(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    res.status(200).json({ message: 'Order deleted successfully' });
+  } catch (error) {
+    res.status(400).json({
+      message: 'Failed to delete order',
+      error: error.message
+    });
+  }
+};
 
 module.exports = {
-  listOrder,
-  getOrderById,
   createOrder,
+  getOrders,
+  getOrderById,
   updateOrder,
   deleteOrder
 };

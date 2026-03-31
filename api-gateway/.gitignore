@@ -1,5 +1,12 @@
-﻿node_modules/
+node_modules/
+
 .env
-npm-debug.log*
+.env.*
+.ENV
+.ENV.*
+!.env.example
+
 coverage/
+logs/
 *.log
+npm-debug.log*

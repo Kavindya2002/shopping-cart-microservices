@@ -1,9 +1,8 @@
 ﻿const express = require('express');
-
 const {
-  listCustomer,
-  getCustomerById,
   createCustomer,
+  getCustomers,
+  getCustomerById,
   updateCustomer,
   deleteCustomer
 } = require('../controllers/customerController');
@@ -11,25 +10,15 @@ const {
 const router = express.Router();
 
 /**
- * @openapi
- * /:
- *   get:
- *     summary: Get all customers
- *     tags: [Customers]
- *     responses:
- *       200:
- *         description: A list of customers
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 count:
- *                   type: integer
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Customer'
+ * @swagger
+ * tags:
+ *   name: Customers
+ *   description: Customer management endpoints
+ */
+
+/**
+ * @swagger
+ * /api/customers:
  *   post:
  *     summary: Create a new customer
  *     tags: [Customers]
@@ -42,12 +31,18 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: Customer created successfully
+ *   get:
+ *     summary: Get all customers
+ *     tags: [Customers]
+ *     responses:
+ *       200:
+ *         description: List of customers
  */
-router.route('/').get(listCustomer).post(createCustomer);
+router.route('/').post(createCustomer).get(getCustomers);
 
 /**
- * @openapi
- * /{id}:
+ * @swagger
+ * /api/customers/{id}:
  *   get:
  *     summary: Get a customer by ID
  *     tags: [Customers]

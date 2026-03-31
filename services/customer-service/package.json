@@ -1,17 +1,21 @@
 ﻿{
   "name": "customer-service",
   "version": "1.0.0",
-  "description": "Customer Service for the Shopping Cart microservices project",
+  "description": "Customer service for the university microservices assignment",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js",
-    "test": "node -e \"console.log('No automated tests configured for customer-service yet.')\""
+    "dev": "node server.js"
   },
-  "keywords": ["microservice", "express", "mongoose", "swagger"],
-  "author": "University group project",
+  "keywords": [
+    "customer-service",
+    "microservice",
+    "express",
+    "mongoose",
+    "swagger"
+  ],
+  "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

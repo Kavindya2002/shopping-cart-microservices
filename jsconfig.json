@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "checkJs": false,
+    "module": "commonjs",
+    "target": "es2020"
+  },
+  "include": [
+    "api-gateway/**/*.js",
+    "services/**/*.js"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/coverage",
+    "**/dist"
+  ]
+}

@@ -2,6 +2,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
 const swaggerUi = require('swagger-ui-express');
 const connectDB = require('./src/config/db');
 const customerRoutes = require('./src/routes/customerRoutes');
@@ -16,13 +17,26 @@ app.use(express.json());
 app.get('/health', (req, res) => {
   res.status(200).json({
     service: 'customer-service',
-    status: 'ok',
+    status: mongoose.connection.readyState === 1 ? 'ok' : 'degraded',
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
     message: 'Customer Service is running'
   });
 });
 
-app.use('/api/customers', customerRoutes);
+app.use('/api/customers', (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({
+      message: 'Database not connected. Update MONGO_URI and restart the service.'
+    });
+  }
+
+  next();
+}, customerRoutes);
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.get('/docs-json', (req, res) => {
+  res.status(200).json(swaggerSpec);
+});
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });

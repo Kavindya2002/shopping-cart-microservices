@@ -15,12 +15,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/', rootRoutes);
+registerProxies(app);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
 app.get('/docs-json', (req, res) => {
   res.status(200).json(swaggerSpec);
 });
-
-registerProxies(app);
 
 app.use(notFound);
 app.use(errorHandler);

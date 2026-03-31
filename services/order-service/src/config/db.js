@@ -1,13 +1,30 @@
 const mongoose = require('mongoose');
 
+mongoose.set('bufferCommands', false);
+
 const connectDB = async () => {
+  const mongoUri = process.env.MONGO_URI;
+
+  if (!mongoUri) {
+    console.error('MONGO_URI is not set. Starting Order Service without a database connection.');
+    return false;
+  }
+
+  if (/USERNAME|PASSWORD|CLUSTER\.mongodb\.net/i.test(mongoUri)) {
+    console.error('MONGO_URI still contains placeholder values. Starting Order Service without a database connection.');
+    return false;
+  }
+
   try {
-    const connection = await mongoose.connect(process.env.MONGO_URI);
+    const connection = await mongoose.connect(mongoUri, {
+      serverSelectionTimeoutMS: 5000
+    });
     console.log(`MongoDB Atlas connected: ${connection.connection.host}`);
+    return true;
   } catch (error) {
-    console.error('Database connection failed. Please check your MONGO_URI.');
+    console.error('Database connection failed. Starting Order Service without a database connection.');
     console.error(error.message);
-    process.exit(1);
+    return false;
   }
 };
 

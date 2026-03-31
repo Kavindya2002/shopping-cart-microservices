@@ -43,18 +43,26 @@ The API Gateway:
 - Order routes: `http://localhost:3000/orders`
 - Payment routes: `http://localhost:3000/payments`
 - Inventory routes: `http://localhost:3000/inventory`
-- Product docs through gateway: `http://localhost:3000/products/docs`
-- Customer docs through gateway: `http://localhost:3000/customers/docs`
-- Cart docs through gateway: `http://localhost:3000/cart/docs`
-- Order docs through gateway: `http://localhost:3000/orders/docs`
-- Payment docs through gateway: `http://localhost:3000/payments/docs`
-- Inventory docs through gateway: `http://localhost:3000/inventory/docs`
+- Product docs through gateway: `http://localhost:3000/docs/products`
+- Customer docs through gateway: `http://localhost:3000/docs/customers`
+- Cart docs through gateway: `http://localhost:3000/docs/cart`
+- Order docs through gateway: `http://localhost:3000/docs/orders`
+- Payment docs through gateway: `http://localhost:3000/docs/payments`
+- Inventory docs through gateway: `http://localhost:3000/docs/inventory`
+- Legacy aliases also work: `http://localhost:3000/products/docs` and equivalents
 
 ## How To Run
 1. Start MongoDB locally.
 2. Open a terminal for each service and run `npm install` then `npm start`.
 3. Open a terminal for `api-gateway` and run `npm install` then `npm start`.
 4. Open Swagger URLs to verify direct and gateway access.
+
+## Quality Checks
+- Install root dependencies with `npm install`.
+- Run `npm run lint` for repo-wide ESLint checks.
+- Run `npm run syntax` for JavaScript syntax validation.
+- Run `npm test` to execute each package's configured test script.
+- Run `npm run check` to execute lint, syntax, and package test checks together.
 
 ## Suggested Branch Strategy
 - `main`: stable demo-ready branch

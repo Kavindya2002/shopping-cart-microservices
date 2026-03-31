@@ -4,7 +4,11 @@
   "description": "This project is a university microservices MVP for a clothing shop / shopping cart system. The solution separates business capabilities into six independent Node.js + Express.js + MongoDB microservices and exposes them through a single API Gateway.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint api-gateway services scripts",
+    "lint:fix": "eslint api-gateway services scripts --fix",
+    "syntax": "node scripts/check-syntax.js",
+    "test": "node scripts/run-tests.js",
+    "check": "node scripts/run-checks.js"
   },
   "repository": {
     "type": "git",
@@ -24,5 +28,10 @@
     "mongoose": "^9.3.3",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.25.1",
+    "eslint": "^9.25.1",
+    "globals": "^16.0.0"
   }
 }

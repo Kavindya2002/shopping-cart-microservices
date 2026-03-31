@@ -19,6 +19,7 @@ router.get('/', (req, res) => {
     name: service.name,
     gatewayPath: service.gatewayPath,
     directServiceUrl: service.target,
+    docsPath: `/docs/${service.docsSlug}`,
     proxiedDocs: `${service.gatewayPath}/docs`,
     proxiedHealth: `${service.gatewayPath}/health`
   }));
@@ -27,6 +28,7 @@ router.get('/', (req, res) => {
     message: 'Shopping Cart API Gateway is running',
     gateway: process.env.GATEWAY_NAME || 'api-gateway',
     docs: '/docs',
+    docsJson: '/docs-json',
     health: '/health',
     services: serviceList
   });

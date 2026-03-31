@@ -1,5 +1,13 @@
 ﻿const { createProxyMiddleware } = require('http-proxy-middleware');
 
+const appendPath = (targetPrefix, currentPath) => {
+  if (!currentPath || currentPath === '/') {
+    return targetPrefix;
+  }
+
+  return `${targetPrefix}${currentPath}`;
+};
+
 const createServiceProxy = (service, type) => {
   const baseOptions = {
     target: service.target,
@@ -17,27 +25,27 @@ const createServiceProxy = (service, type) => {
   if (type === 'docs') {
     return createProxyMiddleware({
       ...baseOptions,
-      pathRewrite: (path) => path.replace(new RegExp(`^${service.gatewayPath}/docs`), '/docs')
+      pathRewrite: (path) => appendPath('/docs', path)
     });
   }
 
   if (type === 'docs-json') {
     return createProxyMiddleware({
       ...baseOptions,
-      pathRewrite: (path) => path.replace(new RegExp(`^${service.gatewayPath}/docs-json`), '/docs-json')
+      pathRewrite: (path) => appendPath('/docs-json', path)
     });
   }
 
   if (type === 'health') {
     return createProxyMiddleware({
       ...baseOptions,
-      pathRewrite: (path) => path.replace(new RegExp(`^${service.gatewayPath}/health`), '/health')
+      pathRewrite: (path) => appendPath('/health', path)
     });
   }
 
   return createProxyMiddleware({
     ...baseOptions,
-    pathRewrite: (path) => path.replace(new RegExp(`^${service.gatewayPath}`), service.servicePath)
+    pathRewrite: (path) => appendPath(service.servicePath, path)
   });
 };
 

@@ -1,9 +1,8 @@
 ﻿const express = require('express');
-
 const {
-  listProduct,
-  getProductById,
   createProduct,
+  getProducts,
+  getProductById,
   updateProduct,
   deleteProduct
 } = require('../controllers/productController');
@@ -11,25 +10,15 @@ const {
 const router = express.Router();
 
 /**
- * @openapi
- * /:
- *   get:
- *     summary: Get all products
- *     tags: [Products]
- *     responses:
- *       200:
- *         description: A list of products
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 count:
- *                   type: integer
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Product'
+ * @swagger
+ * tags:
+ *   name: Products
+ *   description: Product management endpoints
+ */
+
+/**
+ * @swagger
+ * /api/products:
  *   post:
  *     summary: Create a new product
  *     tags: [Products]
@@ -42,12 +31,18 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: Product created successfully
+ *   get:
+ *     summary: Get all products
+ *     tags: [Products]
+ *     responses:
+ *       200:
+ *         description: List of products
  */
-router.route('/').get(listProduct).post(createProduct);
+router.route('/').post(createProduct).get(getProducts);
 
 /**
- * @openapi
- * /{id}:
+ * @swagger
+ * /api/products/{id}:
  *   get:
  *     summary: Get a product by ID
  *     tags: [Products]

@@ -1,17 +1,21 @@
 ﻿{
   "name": "product-service",
   "version": "1.0.0",
-  "description": "Product Service for the Shopping Cart microservices project",
+  "description": "Product service for the university microservices assignment",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js",
-    "test": "node -e \"console.log('No automated tests configured for product-service yet.')\""
+    "dev": "node server.js"
   },
-  "keywords": ["microservice", "express", "mongoose", "swagger"],
-  "author": "University group project",
+  "keywords": [
+    "product-service",
+    "microservice",
+    "express",
+    "mongoose",
+    "swagger"
+  ],
+  "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

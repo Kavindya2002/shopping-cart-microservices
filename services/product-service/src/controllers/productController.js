@@ -1,59 +1,72 @@
-﻿const asyncHandler = require('../utils/asyncHandler');
-const productService = require('../services/productService');
+﻿const Product = require('../models/Product');
 
-const listProduct = asyncHandler(async (req, res) => {
-  const records = await productService.getAll();
-
-  res.status(200).json({
-    count: records.length,
-    data: records
-  });
-});
-
-const getProductById = asyncHandler(async (req, res) => {
-  const record = await productService.getById(req.params.id);
-
-  if (!record) {
-    res.status(404);
-    throw new Error('Product not found');
+const createProduct = async (req, res) => {
+  try {
+    const product = await Product.create(req.body);
+    res.status(201).json(product);
+  } catch (error) {
+    res.status(400).json({ message: 'Failed to create product', error: error.message });
   }
+};
 
-  res.status(200).json(record);
-});
-
-const createProduct = asyncHandler(async (req, res) => {
-  const record = await productService.create(req.body);
-  res.status(201).json(record);
-});
-
-const updateProduct = asyncHandler(async (req, res) => {
-  const record = await productService.updateById(req.params.id, req.body);
-
-  if (!record) {
-    res.status(404);
-    throw new Error('Product not found');
+const getProducts = async (req, res) => {
+  try {
+    const products = await Product.find().sort({ createdAt: -1 });
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch products', error: error.message });
   }
+};
 
-  res.status(200).json(record);
-});
+const getProductById = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
 
-const deleteProduct = asyncHandler(async (req, res) => {
-  const record = await productService.deleteById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
 
-  if (!record) {
-    res.status(404);
-    throw new Error('Product not found');
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(400).json({ message: 'Invalid product ID', error: error.message });
   }
+};
 
-  res.status(200).json({
-    message: 'Product deleted successfully'
-  });
-});
+const updateProduct = async (req, res) => {
+  try {
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true
+    });
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(400).json({ message: 'Failed to update product', error: error.message });
+  }
+};
+
+const deleteProduct = async (req, res) => {
+  try {
+    const product = await Product.findByIdAndDelete(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.status(200).json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    res.status(400).json({ message: 'Failed to delete product', error: error.message });
+  }
+};
 
 module.exports = {
-  listProduct,
-  getProductById,
   createProduct,
+  getProducts,
+  getProductById,
   updateProduct,
   deleteProduct
 };

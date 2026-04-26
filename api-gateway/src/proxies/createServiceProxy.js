@@ -1,7 +1,11 @@
 ﻿const { createProxyMiddleware } = require('http-proxy-middleware');
 
-const appendPath = (targetPrefix, currentPath) => {
+const appendPath = (targetPrefix, currentPath, options = {}) => {
   if (!currentPath || currentPath === '/') {
+    if (options.trailingSlash) {
+      return `${targetPrefix}/`;
+    }
+
     return targetPrefix;
   }
 
@@ -25,7 +29,7 @@ const createServiceProxy = (service, type) => {
   if (type === 'docs') {
     return createProxyMiddleware({
       ...baseOptions,
-      pathRewrite: (path) => appendPath('/docs', path)
+      pathRewrite: (path) => appendPath('/docs', path, { trailingSlash: true })
     });
   }
 

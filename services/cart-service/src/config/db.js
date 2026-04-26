@@ -1,6 +1,22 @@
 const mongoose = require('mongoose');
+const dns = require('node:dns');
 
 mongoose.set('bufferCommands', false);
+
+const configureDnsServers = () => {
+  if (!process.env.DNS_SERVERS) {
+    return;
+  }
+
+  const servers = process.env.DNS_SERVERS
+    .split(',')
+    .map((server) => server.trim())
+    .filter(Boolean);
+
+  if (servers.length > 0) {
+    dns.setServers(servers);
+  }
+};
 
 const connectDB = async () => {
   const mongoUri = process.env.MONGO_URI;
@@ -16,6 +32,8 @@ const connectDB = async () => {
   }
 
   try {
+    configureDnsServers();
+
     const connection = await mongoose.connect(mongoUri, {
       serverSelectionTimeoutMS: 5000
     });

@@ -1,0 +1,7 @@
+PORT=5005
+DNS_SERVERS=8.8.8.8,1.1.1.1
+MONGO_URI=mongodb+srv://newuser:asdaadafasasdaqeq@mtit.lvjkm1c.mongodb.net/?appName=MTIT
+#MONGO_URI=mongodb+srv://kavindyamallawa0:qnfugWcJn96cYzcM@cluster0.auzht.mongodb.net/productdb?appName=Cluster0
+#MONGO_URI=mongodb+srv://deshan:NHhuaIWfDGbCyrT3@cluster0.be6ta3k.mongodb.net/?appName=Cluster0
+#mongodb+srv://deshan:NHhuaIWfDGbCyrT3@mtit.lvjkm1c.mongodb.net/?appName=MTIT
+
